@@ -1,3 +1,5 @@
+let gameOver = false;
+
 const gameBoard = ["", "", "", "", "", "", "", "", ""];
 
 function placeMark(index, mark) {
@@ -17,15 +19,27 @@ function switchPlayer() {
 }
 
 function playTurn(index) {
+  if (gameOver) return;
+
   const placed = placeMark(index, currentPlayer);
   if (!placed) return;
 
   const winner = checkWinner();
 
   if (winner) {
-    console.log(winner + "wins!");
+    console.log(winner + " wins!");
+    gameOver = true;
     return;
   }
+
+  const tie = checkTie();
+
+  if (tie) {
+    console.log("It's a tie!");
+    gameOver = true;
+    return;
+  }
+
   switchPlayer();
   console.log(gameBoard);
 }
@@ -56,4 +70,20 @@ function checkWinner() {
     }
   }
   return null;
+}
+
+function checkTie() {
+  return gameBoard.every((cell) => cell !== "");
+}
+
+function restartGame() {
+  for (let i = 0; i < gameBoard.length; i++) {
+    gameBoard[i] = "";
+  }
+
+  currentPlayer = "X";
+  gameOver = false;
+
+  console.log("Game restarted!");
+  console.log(gameBoard);
 }
