@@ -1,3 +1,21 @@
+const cells = document.querySelectorAll(".cell");
+const resultDisplay = document.querySelector("#result");
+const restartButton = document.querySelector("#restart");
+
+function renderBoard() {
+  cells.forEach((cell, index) => {
+    cell.textContent = gameBoard[index];
+  });
+}
+
+cells.forEach((cell) => {
+  cell.addEventListener("click", () => {
+    const index = Number(cell.dataset.index);
+    playTurn(index);
+    renderBoard();
+  });
+});
+
 let gameOver = false;
 
 const gameBoard = ["", "", "", "", "", "", "", "", ""];
@@ -27,7 +45,7 @@ function playTurn(index) {
   const winner = checkWinner();
 
   if (winner) {
-    console.log(winner + " wins!");
+    resultDisplay.textContent = winner + " wins!";
     gameOver = true;
     return;
   }
@@ -35,13 +53,12 @@ function playTurn(index) {
   const tie = checkTie();
 
   if (tie) {
-    console.log("It's a tie!");
+    resultDisplay.textContent = "It's a tie!";
     gameOver = true;
     return;
   }
 
   switchPlayer();
-  console.log(gameBoard);
 }
 
 const winningPatterns = [
@@ -83,7 +100,11 @@ function restartGame() {
 
   currentPlayer = "X";
   gameOver = false;
+  resultDisplay.textContent = "";
 
-  console.log("Game restarted!");
-  console.log(gameBoard);
+  renderBoard();
 }
+
+restartButton.addEventListener("click", restartGame);
+
+renderBoard();
